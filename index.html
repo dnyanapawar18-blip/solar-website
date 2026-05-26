@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supersun Solar Solution</title>
+
+<style>
+
+/* ===== RESET ===== */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI', sans-serif;
+scroll-behavior:smooth;
+}
+
+/* ===== BACKGROUND ===== */
+body{
+background: url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1600&q=80");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+color:#0b1b2b;
+}
+
+/* OVERLAY */
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(
+120deg,
+rgba(135,206,235,0.35),
+rgba(255,140,66,0.35),
+rgba(30,60,114,0.55)
+);
+z-index:-1;
+}
+
+/* ===== LANDING PAGE ===== */
+.landing{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+padding:20px;
+}
+
+.logo-main{
+width:240px;
+padding:15px;
+background:white;
+border-radius:20px;
+box-shadow:0 0 50px rgba(255,235,59,0.9);
+animation:logoGlow 2s infinite alternate;
+}
+
+@keyframes logoGlow{
+from{transform:scale(1); box-shadow:0 0 20px rgba(255,235,59,0.4);}
+to{transform:scale(1.08); box-shadow:0 0 60px rgba(255,235,59,1);}
+}
+
+.landing h1{
+font-size:48px;
+color:#ffeb3b;
+margin-top:20px;
+}
+
+.landing p{
+color:white;
+margin-top:10px;
+font-size:18px;
+}
+
+/* BUTTON */
+.btn{
+display:inline-block;
+padding:14px 35px;
+background:linear-gradient(45deg,#ffeb3b,#ff9800);
+color:black;
+font-weight:bold;
+border-radius:50px;
+margin-top:20px;
+text-decoration:none;
+transition:0.3s;
+border:none;
+cursor:pointer;
+}
+
+.btn:hover{
+transform:scale(1.1);
+}
+
+/* ===== NAV ===== */
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.logo-text{
+color:#ffeb3b;
+font-size:26px;
+font-weight:bold;
+}
+
+nav ul{
+display:flex;
+gap:20px;
+list-style:none;
+flex-wrap:wrap;
+}
+
+nav ul li a{
+text-decoration:none;
+color:white;
+font-weight:bold;
+}
+
+nav ul li a:hover{
+color:#ff9800;
+}
+
+/* ===== SECTIONS ===== */
+section{
+padding:80px 8%;
+}
+
+.section-title h2{
+text-align:center;
+font-size:40px;
+margin-bottom:40px;
+color:white;
+}
+
+/* ===== CARDS ===== */
+.cards,
+.pricing-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+}
+
+.card,
+.price-card,
+.review,
+form{
+background:rgba(255,255,255,0.88);
+backdrop-filter:blur(10px);
+padding:20px;
+border-radius:18px;
+transition:0.3s;
+text-align:center;
+}
+
+.card:hover,
+.price-card:hover,
+.review:hover{
+transform:translateY(-8px);
+}
+
+/* ===== IMAGES ===== */
+.card img,
+.price-card img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:15px;
+margin-bottom:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* ===== REVIEW ===== */
+.review h4{
+color:#ff9800;
+margin-top:10px;
+}
+
+/* ===== CONTACT ===== */
+.contact-box{
+background:rgba(255,255,255,0.9);
+padding:25px;
+border-radius:18px;
+text-align:center;
+font-size:18px;
+line-height:1.8;
+}
+
+.contact-box a{
+color:#ff9800;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* ===== FORM ===== */
+form input,
+form select,
+form textarea{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:16px;
+}
+
+textarea{
+resize:none;
+height:120px;
+}
+
+/* ===== WHATSAPP ===== */
+.whatsapp{
+position:fixed;
+left:20px;
+bottom:20px;
+background:#25d366;
+color:white;
+padding:15px 20px;
+border-radius:50px;
+text-decoration:none;
+font-weight:bold;
+z-index:999;
+}
+
+/* ===== FOOTER ===== */
+footer{
+text-align:center;
+padding:20px;
+background:rgba(0,0,0,0.4);
+color:white;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+.landing h1{font-size:32px;}
+nav{
+flex-direction:column;
+gap:15px;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LANDING -->
+<section class="landing" id="home">
+<img src="logo.jpeg" class="logo-main" alt="Supersun Solar Logo">
+<h1>Supersun Solar Solutions</h1>
+<p>To enhance your life... Go Green ☀️</p>
+<a href="#about" class="btn">Enter Website</a>
+</section>
+
+<!-- NAV -->
+<nav>
+<div class="logo-text">Supersun Solar</div>
+<ul>
+<li><a href="#home">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#gallery">Gallery</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#reviews">Reviews</a></li>
+<li><a href="#contact">Contact</a></li>
+<li><a href="#appointment">Appointment</a></li>
+</ul>
+</nav>
+
+<!-- ABOUT -->
+<section id="about">
+<div class="section-title"><h2>About Us</h2></div>
+<div class="cards">
+<div class="card">
+<h3>6+ Years Experience</h3>
+<p>Trusted solar installation and energy-saving solutions.</p>
+</div>
+
+<div class="card">
+<h3>150+ Clients</h3>
+<p>Serving homes, businesses and industries successfully.</p>
+</div>
+
+<div class="card">
+<h3>1000+ Leads</h3>
+<p>Helping customers switch to clean solar energy.</p>
+</div>
+</div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+<div class="section-title"><h2>Services</h2></div>
+<div class="cards">
+<div class="card">
+<h3>Home Solar</h3>
+<p>Affordable rooftop solar systems for homes.</p>
+</div>
+
+<div class="card">
+<h3>Commercial Solar</h3>
+<p>Reduce business electricity costs efficiently.</p>
+</div>
+
+<div class="card">
+<h3>Industrial Solar</h3>
+<p>Large-scale energy solutions for industries.</p>
+</div>
+</div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+<div class="section-title"><h2>Our Projects</h2></div>
+<div class="cards">
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1200&q=80" alt="Home Installation">
+<h3>Home Installation</h3>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1497440001374-f26997328c1b?auto=format&fit=crop&w=1200&q=80" alt="Solar Farm">
+<h3>Solar Farm</h3>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1200&q=80" alt="Sunset Energy">
+<h3>Sunset Energy</h3>
+</div>
+
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+<div class="section-title"><h2>Pricing</h2></div>
+<div class="pricing-grid">
+
+<div class="price-card">
+<h3>2KW Solar</h3>
+<p>Ideal for small homes</p>
+</div>
+
+<div class="price-card">
+<h3>3KW Solar</h3>
+<p>Perfect for medium homes</p>
+</div>
+
+<div class="price-card">
+<h3>5KW Solar</h3>
+<p>Best for larger usage</p>
+</div>
+
+</div>
+</section>
+<!-- REVIEWS -->
+<section id="reviews">
+<div class="section-title"><h2>Customer Reviews</h2></div>
+<div class="cards">
+
+<div class="review">
+<p>"Excellent service and fast installation!"</p>
+<h4>★★★★★ - Rahul P.</h4>
+</div>
+
+<div class="review">
+<p>"Very professional team and affordable pricing."</p>
+<h4>★★★★★ - Sneha K.</h4>
+</div>
+
+<div class="review">
+<p>"My electricity bill reduced a lot. Highly recommended."</p>
+<h4>★★★★★ - Amit S.</h4>
+</div>
+
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+<div class="section-title"><h2>Contact Us</h2></div>
+<div class="contact-box">
+
+<p><strong>Phone:</strong>
+<a href="tel:+919766000056">+91 9766000056</a>
+</p>
+
+<p><strong>Email:</strong>
+<a href="mailto:supersunsolar@gmail.com">supersunsolar@gmail.com</a>
+</p>
+
+<p><strong>Address:</strong> Maharashtra, India</p>
+
+</div>
+</section>
+
+<!-- APPOINTMENT -->
+<section id="appointment">
+<div class="section-title"><h2>Book Appointment</h2></div>
+
+<form id="appointmentForm">
+
+<input type="text" id="name" placeholder="Name" required>
+
+<input
+type="tel"
+id="mobile"
+placeholder="Mobile Number"
+pattern="[0-9]{10}"
+maxlength="10"
+required
+>
+
+<input type="text" id="address" placeholder="Address" required>
+
+<select id="requirement" required>
+<option value="Home">Home</option>
+<option value="Commercial">Commercial</option>
+<option value="Industrial">Industrial</option>
+</select>
+
+<textarea id="message" placeholder="Message"></textarea>
+
+<button class="btn" type="submit">Submit</button>
+
+</form>
+</section>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/919766000056" class="whatsapp" target="_blank">
+WhatsApp
+</a>
+
+<!-- FOOTER -->
+<footer>
+© <span id="year"></span> Supersun Solar Solution
+</footer>
+
+<script>
+
+/* AUTO YEAR */
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* APPOINTMENT FORM */
+document.getElementById("appointmentForm").addEventListener("submit", async function(e) {
+e.preventDefault();
+
+const mobile = document.getElementById("mobile").value.trim();
+
+if (!/^[0-9]{10}$/.test(mobile)) {
+    alert("Please enter a valid 10-digit mobile number.");
+    return;
+}
+
+const data = {
+    name: document.getElementById("name").value.trim(),
+    mobile: mobile,
+    address: document.getElementById("address").value.trim(),
+    requirement: document.getElementById("requirement").value,
+    message: document.getElementById("message").value.trim()
+};
+
+try {
+
+    /* CHANGE URL WHEN HOSTING ONLINE */
+    const response = await fetch("http://localhost:5000/book-appointment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+        alert("Appointment Booked Successfully ✅");
+        document.getElementById("appointmentForm").reset();
+    } else {
+        alert(result.message || "Booking failed");
+    }
+
+} catch (error) {
+    console.error(error);
+    alert("Cannot connect to backend server. Check if backend is running.");
+}
+
+});
+
+</script>
+
+</body>
+</html>
