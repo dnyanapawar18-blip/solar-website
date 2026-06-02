@@ -1,113 +1,119 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
+const mongoose = require("mongoose");
 
 const app = express();
 
-/* =========================
-   CORS FIX
-========================= */
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST","OPTIONS"],
-    allowedHeaders: ["Content-Type"]
-}));
-
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const FILE_PATH = path.join(__dirname, "appointments.json");
+const PORT = process.env.PORT || 5000;
 
-/* =========================
-   TEST ROUTES
-========================= */
+/* MongoDB Connection */
+console.log("Connecting to MongoDB...");
+
+mongoose.connect(process.env.MONGO_URI, {
+    family: 4
+})
+.then(() => {
+
+    console.log("✅ MongoDB Connected Successfully");
+
+    app.listen(PORT, () => {
+        console.log("🚀 Server running on port " + PORT);
+    });
+
+})
+.catch((err) => {
+    console.log("❌ MongoDB Error:", err);
+});
+
+/* Booking Schema */
+const BookingSchema = new mongoose.Schema({
+
+    name: {
+        type: String,
+        required: true
+    },
+
+    mobile: {
+        type: String,
+        required: true
+    },
+
+    address: {
+        type: String,
+        required: true
+    },
+
+    requirement: {
+        type: String,
+        required: true
+    },
+
+    message: {
+        type: String
+    }
+
+});
+
+const Booking = mongoose.model("Booking", BookingSchema);
+
+/* Home Route */
 app.get("/", (req, res) => {
-    res.send("Super Sun Solar Backend Running ✔");
+    res.send("Super Sun Solar Backend Running");
 });
 
-app.get("/test", (req, res) => {
-    res.send("Backend Working ✔");
-});
+/* Save Appointment */
+app.post("/book-appointment", async (req, res) => {
 
-/* =========================
-   BOOK APPOINTMENT
-========================= */
-app.post("/book-appointment", (req, res) => {
     try {
-        const newAppointment = {
-            id: Date.now(),
-            name: req.body.name,
-            mobile: req.body.mobile,
-            address: req.body.address,
-            requirement: req.body.requirement,
-            message: req.body.message,
-            createdAt: new Date()
-        };
 
-        let appointments = [];
+        console.log(req.body);
 
-        // Read old appointments
-        if (fs.existsSync(FILE_PATH)) {
-            const fileData = fs.readFileSync(FILE_PATH, "utf8");
-            appointments = JSON.parse(fileData || "[]");
-        }
+        const booking = new Booking(req.body);
 
-        // Add new appointment
-        appointments.push(newAppointment);
-
-        // Save file
-        fs.writeFileSync(
-            FILE_PATH,
-            JSON.stringify(appointments, null, 2),
-            "utf8"
-        );
-
-        console.log("Saved Appointment Locally ✔", newAppointment);
+        await booking.save();
 
         res.json({
             success: true,
-            message: "Appointment Booked Successfully"
+            message: "Booking saved successfully"
         });
 
     } catch (error) {
-        console.log("Form Save Error:", error.message);
+
+        console.log(error);
 
         res.status(500).json({
             success: false,
-            message: "Server Error saving appointment"
+            message: "Error saving booking"
         });
+
     }
+
 });
 
-/* =========================
-   GET ALL APPOINTMENTS
-========================= */
-app.get("/appointments", (req, res) => {
+/* View Appointments */
+app.get("/appointments", async (req, res) => {
+
     try {
-        if (!fs.existsSync(FILE_PATH)) {
-            return res.json([]);
-        }
 
-        const fileData = fs.readFileSync(FILE_PATH, "utf8");
-        const appointments = JSON.parse(fileData || "[]");
+        const data = await Booking.find();
 
-        res.json(appointments);
+        res.json(data);
 
-    } catch (error) {
+    } catch (err) {
+
+        console.log(err);
+
         res.status(500).json({
             success: false,
             message: "Error fetching appointments"
         });
+
     }
-});
 
-/* =========================
-   START SERVER (KEEP LAST)
-========================= */
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, "0.0.0.0", () => {
-    console.log("Server running on port " + PORT + " 🚀");
-    console.log("Saving data locally to: appointments.json");
 });
