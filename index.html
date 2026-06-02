@@ -460,43 +460,41 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 /* APPOINTMENT FORM */
 document.getElementById("appointmentForm").addEventListener("submit", async function(e) {
-e.preventDefault();
 
-const mobile = document.getElementById("mobile").value.trim();
+    e.preventDefault();
 
-if (!/^[0-9]{10}$/.test(mobile)) {
-    alert("Please enter a valid 10-digit mobile number.");
-    return;
-}
+    const mobile = document.getElementById("mobile").value.trim();
 
-const data = {
-    name: document.getElementById("name").value.trim(),
-    mobile: mobile,
-    address: document.getElementById("address").value.trim(),
-    requirement: document.getElementById("requirement").value,
-    message: document.getElementById("message").value.trim()
-};
-
-try {
-
-    /* CHANGE URL WHEN HOSTING ONLINE */
-const response = await fetch("https://solar-website-1-7rj8.onrender.com/book-appointment", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-});
-    const result = await response.json();
-
-    
-        alert(result.message || "Booking failed");
+    if (!/^[0-9]{10}$/.test(mobile)) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
     }
-if (response.ok && result.success) {
 
-    alert("Appointment Booked Successfully ✅");
+    const data = {
+        name: document.getElementById("name").value.trim(),
+        mobile: mobile,
+        address: document.getElementById("address").value.trim(),
+        requirement: document.getElementById("requirement").value,
+        message: document.getElementById("message").value.trim()
+    };
 
-    const whatsappMessage =
+    try {
+
+        const response = await fetch("https://solar-website-1-7rj8.onrender.com/book-appointment", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+
+            alert("Appointment Booked Successfully ✅");
+
+            const whatsappMessage =
 `New Solar Appointment
 
 Name: ${data.name}
@@ -505,25 +503,28 @@ Address: ${data.address}
 Requirement: ${data.requirement}
 Message: ${data.message}`;
 
-    const whatsappURL =
+            const whatsappURL =
 `https://wa.me/9699640645?text=${encodeURIComponent(whatsappMessage)}`;
 
-    window.open(whatsappURL, "_blank");
+            window.open(whatsappURL, "_blank");
 
-    document.getElementById("appointmentForm").reset();
+            document.getElementById("appointmentForm").reset();
 
-} else {
+        } else {
+
             alert(result.message || "Booking failed");
 
-}
-} catch (error) {
-    console.error(error);
-    alert("server connection failed.please try again later.");
-}
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Server connection failed. Please try again later.");
+
+    }
 
 });
 
-</script>
-
-</body>
+</script></body>
 </html>
