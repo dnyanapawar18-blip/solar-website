@@ -1,8 +1,13 @@
 require("dotenv").config();
 
+// Check if .env variables are loading
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded ✓" : "Missing ✗");
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
 
 const app = express();
 
@@ -11,6 +16,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 5000;
+
+/* Email Transporter */
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+// Test Gmail connection on server startup
+transporter.verify((error, success) => {
+    if (error) {
+        console.log("❌ Gmail Error:", error.message);
+    } else {
+        console.log("✅ Gmail Connected Successfully");
+    }
+});
 
 /* MongoDB Connection */
 console.log("Connecting to MongoDB...");
@@ -23,7 +46,7 @@ mongoose.connect(process.env.MONGO_URI, {
     console.log("✅ MongoDB Connected Successfully");
 
     app.listen(PORT, () => {
-        console.log("🚀 Server running on port " + PORT);
+        console.log(`🚀 Server running on port ${PORT}`);
     });
 
 })
@@ -72,24 +95,53 @@ app.post("/book-appointment", async (req, res) => {
 
     try {
 
-        console.log(req.body);
+        const { name, mobile, address, requirement, message } = req.body;
 
-        const booking = new Booking(req.body);
+        console.log("📩 Booking received:", req.body);
+
+        // Save to MongoDB
+        const booking = new Booking({
+            name,
+            mobile,
+            address,
+            requirement,
+            message
+        });
 
         await booking.save();
+        console.log("💾 Booking saved to database");
+
+        // Send Email Notification
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: "pawar.dnyanu11@gmail.com",
+            subject: "🔔 New Appointment Booking",
+
+            text: `
+New Appointment Booked
+
+Name: ${name}
+Mobile: ${mobile}
+Address: ${address}
+Requirement: ${requirement}
+Message: ${message}
+            `,
+        });
+
+        console.log("📧 Email sent successfully");
 
         res.json({
             success: true,
-            message: "Booking saved successfully"
+            message: "Booking saved and email sent successfully"
         });
 
     } catch (error) {
 
-        console.log(error);
+        console.log("❌ ERROR:", error);
 
         res.status(500).json({
             success: false,
-            message: "Error saving booking"
+            message: "Error saving booking or sending email"
         });
 
     }
